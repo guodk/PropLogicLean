@@ -116,6 +116,18 @@ jobs:
         with:
           path: ${{ env.HOME_PAGE_EXISTS == 'true' && 'home_page/_site' || 'home_page/' }}
 
+      - name: Copy docs into site
+        if: always()
+        run: |
+          # Ensure target exists
+          mkdir -p home_page/_site
+          if [ -d docs ]; then
+            echo "Copying docs/ into home_page/_site/"
+            cp -r docs/* home_page/_site/ || true
+          else
+            echo "No docs/ directory to copy."
+          fi
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
